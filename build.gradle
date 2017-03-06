@@ -1,0 +1,13 @@
+group 'io.gitlab.arturbosch'
+version '1'
+
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compile 'com.github.javaparser:javaparser-core:3.1.1'
+}
