@@ -17,7 +17,7 @@ import java.util.List;
 public class InterfaceCleaner {
 
     public static void main(String[] args) throws IOException {
-        Inspection.TEMPLATE.accept(args,
+        Inspection.TEMPLATE.accept(args, /*saveModification*/true,
                 sourceRoot -> new InterfaceCleaner().run(sourceRoot.getCompilationUnits()));
     }
 
