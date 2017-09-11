@@ -9,5 +9,5 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.javaparser:javaparser-core:3.1.2'
+    compile 'com.github.javaparser:javaparser-core:3.3.5'
 }
