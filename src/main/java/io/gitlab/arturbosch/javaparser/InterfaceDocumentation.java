@@ -32,7 +32,7 @@ public class InterfaceDocumentation {
         @Override
         public void visit(ClassOrInterfaceDeclaration n, CompilationUnit arg) {
             if (n.isInterface()) {
-                if (n.getModifiers().contains(Modifier.PUBLIC)) {
+                if (n.hasModifier(Modifier.Keyword.PUBLIC)) {
                     String packageName = arg.getPackageDeclaration()
                             .map(NodeWithName::getNameAsString)
                             .orElse("<default>");
