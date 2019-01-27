@@ -1,22 +1,22 @@
 package io.gitlab.arturbosch.javaparser;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import io.gitlab.arturbosch.javaparser.support.Inspection;
 
-import java.io.IOException;
-import java.util.EnumSet;
 import java.util.List;
+
+import static com.github.javaparser.ast.Modifier.Keyword.ABSTRACT;
+import static com.github.javaparser.ast.Modifier.Keyword.PUBLIC;
 
 /**
  * @author Artur Bosch
  */
 public class InterfaceCleaner {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Inspection.TEMPLATE.accept(args, /*saveModification*/true,
                 sourceRoot -> new InterfaceCleaner().run(sourceRoot.getCompilationUnits()));
     }
@@ -26,12 +26,11 @@ public class InterfaceCleaner {
         units.forEach(unit -> unit.accept(visitor, null));
     }
 
-    private class InterfaceVisitor extends VoidVisitorAdapter<Object> {
+    private class InterfaceVisitor extends VoidVisitorAdapter<Void> {
         @Override
-        public void visit(ClassOrInterfaceDeclaration n, Object arg) {
+        public void visit(ClassOrInterfaceDeclaration n, Void arg) {
             if (n.isInterface()) {
-                EnumSet<Modifier> modifiers = n.getModifiers();
-                if (modifiers.contains(Modifier.ABSTRACT)) modifiers.remove(Modifier.ABSTRACT);
+                if (n.hasModifier(ABSTRACT)) n.removeModifier(ABSTRACT);
                 InterfaceMethodVisitor visitor = new InterfaceMethodVisitor();
                 n.accept(visitor, arg);
             }
@@ -39,12 +38,11 @@ public class InterfaceCleaner {
         }
     }
 
-    private class InterfaceMethodVisitor extends VoidVisitorAdapter<Object> {
+    private class InterfaceMethodVisitor extends VoidVisitorAdapter<Void> {
         @Override
-        public void visit(MethodDeclaration n, Object arg) {
-            EnumSet<Modifier> modifiers = n.getModifiers();
-            if (modifiers.contains(Modifier.ABSTRACT)) modifiers.remove(Modifier.ABSTRACT);
-            if (modifiers.contains(Modifier.PUBLIC)) modifiers.remove(Modifier.PUBLIC);
+        public void visit(MethodDeclaration n, Void arg) {
+            if (n.hasModifier(ABSTRACT)) n.removeModifier(ABSTRACT);
+            if (n.hasModifier(PUBLIC)) n.removeModifier(PUBLIC);
             super.visit(n, arg);
         }
     }
